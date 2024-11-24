@@ -1,0 +1,43 @@
+drawrule(pos, count, step, options) := (
+	assert(islist(pos)   & length(pos)   == 2, "pos of `drawrule(pos, _, _, _)` must be list of length 2");
+	assert(islist(count) & length(count) == 2, "count of `drawrule(_, count, _, _)` must be list of length 2");
+	assert(islist(step)  & length(step)  == 2, "step of `drawrule(_, _, step, _)` must be list of length 2");
+	assert(islist(options), "options of `drawrule(_, _, _, options)` must be list");
+
+	regional(index); index = 1;
+	regional(from, to); // uninitialized
+
+	// draw lines from top to bottom
+	repeat(take(count, 1), xindex, (
+		from = [
+			take(pos, 1) + take(step, 1) * (xindex - 1),
+			take(pos, 2)
+		];
+
+		to   = [
+			take(pos, 1) + take(step, 1) * (xindex - 1),
+			take(pos, 2) + take(step, 2) * (take(count, 2) - 1)
+		];
+
+		Listplot(text(index), [from, to], options);
+
+		index = index + 1;
+	));
+
+	// draw lines from left to right
+	repeat(take(count, 2), yindex, (
+		from = [
+			take(pos, 1),
+			take(pos, 2) + take(step, 2) * (yindex - 1)
+		];
+
+		to   = [
+			take(pos, 1) + take(step, 1) * (take(count, 1) - 1),
+			take(pos, 2) + take(step, 2) * (yindex - 1)
+		];
+
+		Listplot(text(index), [from, to], options);
+
+		index = index + 1;
+	));
+);
